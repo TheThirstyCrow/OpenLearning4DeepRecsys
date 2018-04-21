@@ -31,7 +31,8 @@ class movie_lens_data_repos:
 
 		self.training_ratings_score_1 = train.loc[:,'rate_1']
 		self.training_ratings_score_2 = train.loc[:,'rate_2']
-
+		print("LENGTH OFFFFFFFFFFFFFF 1111: ", self.training_ratings_item_1)
+		print("LENGTH OFFFFFFFFFFFFFF 222222222: ", self.training_ratings_item_1)
 		self.test_ratings_user = validate.loc[:,'user_1']
 
 		self.test_ratings_item_1 = validate.loc[:,'item_1']
@@ -48,8 +49,10 @@ class movie_lens_data_repos:
 
 		self.n_user = int(max([self.training_ratings_user_1.max(), self.training_ratings_user_2.max(),self.test_ratings_user.max(),self.eval_ratings_user.max()])+1)
 
-		self.n_item_1 = int(max([self.training_ratings_item_1.max(),self.test_ratings_item_1.max(),self.eval_ratings_item_1.max()])+1)
-		self.n_item_2 = int(max([self.training_ratings_item_2.max(), self.test_ratings_item_2.max(), self.eval_ratings_item_2.max()]) + 1)
+		# self.n_item_1 = int(max([self.training_ratings_item_1.max(),self.test_ratings_item_1.max(),self.eval_ratings_item_1.max()])+1)
+		self.n_item_1 = self.training_ratings_item_1.max()
+		# self.n_item_2 = int(max([self.training_ratings_item_2.max(), self.test_ratings_item_2.max(), self.eval_ratings_item_2.max()]) + 1)
+		self.n_item_2 = self.training_ratings_item_1.max()
 
 		self.n_user_attr, self.n_item_attr_1, self.n_item_attr_2 = user_content.shape[1], item_content_1.shape[1], item_content_2.shape[1]
 		print('n_user=%d n_item=%d n_user_attr=%d n_item_attr=%d' %(self.n_user,self.n_item_1,self.n_user_attr, self.n_item_attr_1))

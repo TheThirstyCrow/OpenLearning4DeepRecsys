@@ -10,6 +10,7 @@ import codecs
 
 def get_100k_data():
 	df = pd.read_csv(r"ratings.csv", sep=',', engine='python')
+
 	df["rating"] = df["rating"].astype(np.float32)
 
 	user_mapping = {}
@@ -43,6 +44,7 @@ def get_100k_data():
 			movie_content.append(movies.loc[[i]].iloc[0]["genres"])
 		else:
 			movie_content.append('')
+
 	vectorizer = CountVectorizer(binary = True)
 	movie_content = vectorizer.fit_transform(movie_content)
 	movie_content = movie_content.astype(np.float32)
@@ -70,49 +72,52 @@ def get_100k_data():
 	print("%%%%%%%%%%%%%%%%%%%%%%%%%")
 
 	df_n ={}
-	df_n["user_1"] = df["userId"][: len(df["userId"]/2)]
-	df_n["user_2"] = df["userId"][len(df["userId"]/2):]
-	df_n["user_1"].index = range(len(df_n["user_1"]))
-	df_n["user_2"].index = range(len(df_n["user_2"]))
+	df_n["user_1"] = df["userId"][: int(len(df["userId"])/2)]
+	df_n["user_2"] = df["userId"][int(len(df["userId"])/2):]
+	df_n["user_1"].index = range(int(len(df_n["user_1"])))
+	df_n["user_2"].index = range(int(len(df_n["user_2"])))
+	print(df_n["user_1"])
+	df_n["item_1"] = df["movieId"][: int(len(df["movieId"])/2)]
+	df_n["item_2"] = df["movieId"][int(len(df["movieId"])/2):]
+	df_n["item_1"].index = range(int(len(df_n["item_1"])))
+	df_n["item_2"].index = range(int(len(df_n["item_2"])))
 
-	df_n["movie_1"] = df["movieId"][: len(df["movieId"]/2)]
-	df_n["movie_2"] = df["movieId"][len(df["movieId"]/2):]
-	df_n["movie_1"].index = range(len(df_n["movie_1"]))
-	df_n["movie_2"].index = range(len(df_n["movie_2"]))
-
-	df_n["rate_1"] = df["movieId"][: len(df["rating"] / 2)]
-	df_n["rate_2"] = df["movieId"][len(df["rating"] / 2):]
-	df_n["rate_1"].index = range(len(df_n["rate_1"]))
-	df_n["rate_2"].index = range(len(df_n["rate_2"]))
+	df_n["rate_1"] = df["movieId"][: int(len(df["rating"])/ 2)]
+	df_n["rate_2"] = df["movieId"][int(len(df["rating"])/2):]
+	df_n["rate_1"].index = range(int(len(df_n["rate_1"])))
+	df_n["rate_2"].index = range(int(len(df_n["rate_2"])))
 
 	df_n = pd.DataFrame(data=df_n)
-	df_n = df_n.dropna(axis = 0, how="all")
+	print("Before:", df_n.shape)
 
-	# l = len(df["userId"])
+	df_n = df_n.dropna(axis = 0, how="all")
+	print("After:", df_n.shape)
+
+	# l = int(len(df["userId"])
 	# df_n={}
 	# df_n["user_1"] = df["userId"].iloc[:int(l/2)]
 	# df_n["user_2"] = df["userId"].iloc[int(l/2):]
-	# print("len of user_1",len(df_n["user_1"]))
-	# print("len of user_2", len(df_n["user_2"]))
+	# print("len of user_1",int(len(df_n["user_1"]))
+	# print("len of user_2", int(len(df_n["user_2"]))
 	#
-	# l = len(df["movieId"])
+	# l = int(len(df["movieId"])
 	# df_n["item_1"] = df["movieId"].iloc[:int(l/2)]
 	# df_n["item_2"] = df["movieId"].iloc[int(l/2):]
-	# print("len of movie_1", len(df_n["item_1"]))
-	# print("len of movie_2", len(df_n["item_2"]))
+	# print("len of movie_1", int(len(df_n["item_1"]))
+	# print("len of movie_2", int(len(df_n["item_2"]))
 	#
 	# df_n["rate_1"] = df["rating"].iloc[:int(l/2)]
 	# df_n["rate_2"] = df["rating"].iloc[int(l/ 2):]
-	# print("len of rate_1", len(df_n["rate_1"].index))
-	# print("len of rate_2", len(df_n["rate_2"].index))
-	# print("again user_1 length: ", len(df_n["user_1"]))
+	# print("len of rate_1", int(len(df_n["rate_1"].index))
+	# print("len of rate_2", int(len(df_n["rate_2"].index))
+	# print("again user_1 length: ", int(len(df_n["user_1"]))
 	#
 	# df_n = pd.DataFrame(data=df_n)
 
 	# df.drop(["userId", "movieId", "rating"], axis =1)
 	# df = df.rename(columns={"userId":"user", "movieId":"item", "rating":"rate"})
 
-	rows = len(df_n)
+	rows = int(len(df_n))
 	print("total rows=", rows)
 	df_n = df_n.iloc[np.random.permutation(rows)].reset_index(drop=True)
 	split_index_train = int(rows * 0.8)
@@ -123,10 +128,16 @@ def get_100k_data():
 
 	print(len(df_n["rate_1"]))
 	print(len(df_n["rate_2"]))
-	print(len(df_n["movie_1"]))
+	print(len(df_n["item_1"]))
+	print(len(df_n["item_2"]))
 	print(len(df_n["user_1"]))
 	print(len(df_n["user_2"]))
+	print(split_index_train)
+	print(split_index_val)
+	print("&&&&&&&&&&&&&&&&&&&&&&&&&")
 	print(df_n["rate_1"])
+	print("&&&&&&&&&&&&&&&&&&&&&&&&&")
+
 
 	with codecs.open('cross_movielens_100k.pkl', 'wb') as outfile:
 		pickle.dump((df_train,df_val, df_test,user_content,movie_content), outfile, pickle.HIGHEST_PROTOCOL)
