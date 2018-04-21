@@ -36,6 +36,8 @@ def grid_search(infile,logfile):
 	lrs=[0.1,0.05]
 	layer_sizes_list = [[16],[16,8]]
 	init_values = [0.01,0.1]
+	print(type(dataset.training_ratings_score))
+
 	mu=dataset.training_ratings_score.mean() 
 	
 	#wt.write('cf_dim,user_attr_rank,item_attr_rank,lr,lamb,mu,n_eopch,batch_size,best_train_rmse,best_test_rmse,best_eval_rmse,best_epoch,init_value,layer_cnt,minutes\n')
